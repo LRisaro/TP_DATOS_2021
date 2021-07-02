@@ -1,7 +1,9 @@
 pandas
 sklearn.neighbors 
+sklearn.naive_bayes
 sklearn.preprocessing 
 sklearn.metrics 
 sklearn.model_selection 
 matplotlib.pyplot 
 sklearn.metrics 
+
