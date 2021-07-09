@@ -5,7 +5,7 @@ def set_value_row_casado_trabajo(row):
     else:
       return 0
 
-def feature_engineering_xg(df):
+def feature_engineering_xg_rf(df):
 
     #Creo columna opera_en_bolsa que indica si opero en bolsa o no
     df["opera_en_bolsa"] = df["ganancia_perdida_declarada_bolsa_argentina"].apply(lambda x: 1 if x != 0 else 0)
@@ -38,3 +38,22 @@ def feature_engineering_xg(df):
       return X, y, df, label_encoder
 
     return df
+    
+    
+#Devuelve solo las columnas que le pido a travez de los indexes
+def get_columns_by_index(df, indexes):
+
+  return df.iloc[:, lambda df: indexes]
+  
+#Convierto las probabilidades que devuele XGBoost para calcular las metricas
+def get_int_predictions(preds):
+  predictions = []
+
+  for i in preds:
+    if i < 0.6:
+      predictions.append(0)
+    else:
+      predictions.append(1)
+
+  return predictions
+ 
