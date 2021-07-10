@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn import preprocessing
+from sklearn.preprocessing import OrdinalEncoder
 
 #Funcion que devuelve un 1 si esa row posee esta combinacion en especifico de valores en sus columnas "trabajo" y "rol_familiar_registrado"
 def set_value_row_casado_trabajo(row):
@@ -63,4 +64,29 @@ def get_int_predictions(preds):
       predictions.append(1)
 
   return predictions
- 
+
+def feature_engineering_KNN_SVM_Naive_Bayes(df):
+    df_clean = df.copy()
+
+    df_clean["educacion_alcanzada"].replace({"preescolar" : 1, "1-4_grado": 2, "5-6_grado": 3, "7-8_grado" : 4, "9_grado" : 5, "1_anio" : 6, "2_anio" : 7, "3_anio" : 8, "4_anio" : 9, "5_anio" : 10, "universidad_1_anio" : 11, 
+      "universidad_2_anio" : 12, "universidad_3_anio" : 13, "universidad_4_anio" : 14, "universiada_5_anio" : 15, "universiada_6_anio" : 16}, inplace = True)
+    
+    df_clean.rol_familiar_registrado.replace(to_replace=["casada"], value=["casado"], inplace=True)
+    df_clean["opera_en_bolsa"] = df_clean["ganancia_perdida_declarada_bolsa_argentina"].apply(lambda x: 1 if x != 0 else 0)
+
+    # Tratamiento de NaN
+    df_clean.fillna('NaN', inplace=True)
+
+    # Conversion de variables
+    ordinalEncoder = OrdinalEncoder(dtype='int')
+    columns_to_encode = ['barrio', 'categoria_de_trabajo', 'estado_marital', 'genero', 'religion', 'rol_familiar_registrado', 'trabajo']
+    try:
+      df_clean[['barrio_encoded', 'categoria_de_trabajo_encoded', 'estado_marital_encoded', 'genero_encoded', 'religion_encoded', 'rol_familiar_registrado_encoded', 'trabajo_encoded']] \
+        = ordinalEncoder.fit_transform(df_clean[columns_to_encode].astype(str))
+    except Exception as exception:
+      print(f'Error en ordinal encoder: {exception}')
+
+    # Elimino columnas
+    df_clean.drop(columns = ['barrio', 'ganancia_perdida_declarada_bolsa_argentina', 'categoria_de_trabajo', 'estado_marital', 'genero', 'religion', 'rol_familiar_registrado', 'trabajo'], inplace = True)
+    
+    return df_clean
