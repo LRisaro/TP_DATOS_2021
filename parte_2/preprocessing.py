@@ -90,3 +90,25 @@ def feature_engineering_KNN_SVM_Naive_Bayes(df):
     df_clean.drop(columns = ['barrio', 'ganancia_perdida_declarada_bolsa_argentina', 'categoria_de_trabajo', 'estado_marital', 'genero', 'religion', 'rol_familiar_registrado', 'trabajo'], inplace = True)
     
     return df_clean
+
+def feature_engineering_TP_primera_parte(df):
+    df_clean = df.copy()   
+    df_clean.rol_familiar_registrado.replace(to_replace=["casada"], value=["casado"], inplace=True)
+    # Tratamiento de NaN
+    df_clean.fillna('NaN', inplace=True)
+
+    # Conversion de variables
+    ordinalEncoder = OrdinalEncoder(dtype='int')
+    columns_to_encode = ['genero', 'rol_familiar_registrado', 'trabajo']
+    try:
+      df_clean[['genero_encoded', 'rol_familiar_registrado_encoded', 'trabajo_encoded']] \
+        = ordinalEncoder.fit_transform(df_clean[columns_to_encode].astype(str))
+    except Exception as exception:
+      print(f'Error en ordinal encoder: {exception}')
+
+    # Elimino columnas
+    df_clean.drop(columns = ['barrio', 'ganancia_perdida_declarada_bolsa_argentina', 'categoria_de_trabajo', 'estado_marital', 'genero', 'anios_estudiados', 'edad', 'educacion_alcanzada', 
+      'horas_trabajo_registradas', 'religion', 'rol_familiar_registrado', 'trabajo'], 
+       inplace = True)
+    
+    return df_clean

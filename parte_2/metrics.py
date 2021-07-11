@@ -21,7 +21,7 @@ def plot_roc(_fpr, _tpr, x):
     plt.legend(loc="lower right")
     plt.show()
 
-def metrics(y_test, y_pred):
+def getMetrics(y_test, y_pred):
     print('\033[1m' + "Accuracy" + '\033[0m', str(accuracy_score(y_test, y_pred)) + "\n", sep=': ')
         
     print('\033[1m' + "Precision" + '\033[0m', str(precision_score(y_test, y_pred)) + "\n", sep=': ')
