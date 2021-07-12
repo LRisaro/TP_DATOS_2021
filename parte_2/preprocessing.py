@@ -13,16 +13,24 @@ def set_value_row_casado_trabajo(row):
 def apply_one_hot_encoding(df):  
     return pd.get_dummies(df, drop_first=True, columns=["categoria_de_trabajo", "educacion_alcanzada", "estado_marital", "religion", "rol_familiar_registrado", "trabajo"])
     
+#Unifico los labels "casado" y "casada" en "casado"
+def unificar_values_casado_casada(df):
+    df.rol_familiar_registrado.replace(to_replace=["casada"],  value=["casado"], inplace=True)
+    return df
+
+#Creo columna es_hombre que indica si la persona es hombre o no
+def crear_columna_es_hombre(df):
+    df["es_hombre"] = df["genero"].apply(lambda x: 1 if x == "hombre" else 0)
+    return df
+    
 def feature_engineering_xg_rf(df):
 
     #Creo columna opera_en_bolsa que indica si opero en bolsa o no
     df["opera_en_bolsa"] = df["ganancia_perdida_declarada_bolsa_argentina"].apply(lambda x: 1 if x != 0 else 0)
 
-    #Creo columna es_hombre que indica si la persona es hombre o no
-    df["es_hombre"] = df["genero"].apply(lambda x: 1 if x == "hombre" else 0)
+    df =  crear_columna_es_hombre(df)
 
-    #Unifico los labels "casado" y "casada" en "casado"
-    df.rol_familiar_registrado.replace(to_replace=["casada"],  value=["casado"], inplace=True)
+    df = unificar_values_casado_casada(df)
 
     #Creo columna casado_trabajo que indica si ese usuario posee una combinacion especifica entre la columna rol_familiar_registrado y trabajo
     df["casado_trabajo"] = df.apply(lambda row: set_value_row_casado_trabajo(row), axis= 1)
