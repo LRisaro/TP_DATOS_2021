@@ -5,6 +5,7 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import roc_auc_score
+from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 
 def plot_roc(_fpr, _tpr, x):
