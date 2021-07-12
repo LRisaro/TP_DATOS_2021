@@ -2,6 +2,19 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.preprocessing import OrdinalEncoder
 
+#Crea una columna si el usuario pertenece a un cierto rango de edad
+def set_age_range(df):
+    df["edad_10_y_20"] = df["edad"].apply(lambda x: 1 if x > 10 and x <= 20 else 0)
+    df["edad_21_y_30"] = df["edad"].apply(lambda x: 1 if x > 20 and x <= 30 else 0)
+    df["edad_31_y_40"] = df["edad"].apply(lambda x: 1 if x > 30 and x <= 40 else 0)
+    df["edad_41_y_50"] = df["edad"].apply(lambda x: 1 if x > 40 and x <= 50 else 0)
+    df["edad_51_y_60"] = df["edad"].apply(lambda x: 1 if x > 50 and x <= 60 else 0)
+    df["edad_61_y_70"] = df["edad"].apply(lambda x: 1 if x > 60 and x <= 70 else 0)
+    df["edad_71_y_80"] = df["edad"].apply(lambda x: 1 if x > 70 and x <= 80 else 0)
+    df["edad_81_y_90"] = df["edad"].apply(lambda x: 1 if x > 80 and x <= 90 else 0)
+    
+    return df
+
 #Funcion que devuelve un 1 si esa row posee esta combinacion en especifico de valores en sus columnas "trabajo" y "rol_familiar_registrado"
 def set_value_row_casado_trabajo(row):
     if (row.rol_familiar_registrado == "casado" and (row.trabajo == "profesional_especializado" or row.trabajo == "directivo_gerente" )):
