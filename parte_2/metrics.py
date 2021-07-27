@@ -22,7 +22,7 @@ def plot_roc(_fpr, _tpr, x):
     plt.legend(loc="lower right")
     plt.show()
 
-def getMetrics(y_test, y_pred):
+def getMetrics(y_test, y_pred, y_pred_proba):
     print('\033[1m' + "Accuracy" + '\033[0m', str(accuracy_score(y_test, y_pred)) + "\n", sep=': ')
         
     print('\033[1m' + "Precision" + '\033[0m', str(precision_score(y_test, y_pred)) + "\n", sep=': ')
@@ -35,6 +35,6 @@ def getMetrics(y_test, y_pred):
     print(str(confusion_matrix(y_test, y_pred)) + "\n")
     
     print('\033[1m' + "AUC-ROC: " + '\033[0m' + "\n")
-    fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+    fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
     plot_roc(fpr, tpr, thresholds)
-    display(roc_auc_score(y_test, y_pred))
+    display(roc_auc_score(y_test, y_pred_proba))

@@ -2,6 +2,9 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.preprocessing import OrdinalEncoder
 
+def GetSeedForTrainSplit():
+    return 15;
+
 #Crea una columna si el usuario pertenece a un cierto rango de edad
 def set_age_range(df):
     df["edad_10_y_20"] = df["edad"].apply(lambda x: 1 if x > 10 and x <= 20 else 0)
