@@ -57,9 +57,6 @@ def feature_engineering_xg_rf(df):
     #Aplico one hot encoding a estas columnas en especifico  
     df = apply_one_hot_encoding(df,["categoria_de_trabajo", "educacion_alcanzada", "estado_marital", "religion", "rol_familiar_registrado", "trabajo"])
 
-    #Borro una columna de cada uno de los one hot creados
-    df.drop(columns = ["categoria_de_trabajo_empleado_municipal", "educacion_alcanzada_1_anio", "estado_marital_matrimonio_civil", "religion_budismo", "rol_familiar_registrado_con_hijos", "trabajo_ejercito"], inplace=True)
-
     if "tiene_alto_valor_adquisitivo" in df.columns:
       label_encoder = preprocessing.LabelEncoder()
       label_encoder.fit(df.tiene_alto_valor_adquisitivo)
