@@ -73,18 +73,6 @@ def feature_engineering_xg_rf(df):
 def get_columns_by_index(df, indexes):
 
   return df.iloc[:, lambda df: indexes]
-  
-#Convierto las probabilidades que devuele XGBoost para calcular las metricas
-def get_int_predictions(preds):
-  predictions = []
-
-  for i in preds:
-    if i < 0.6:
-      predictions.append(0)
-    else:
-      predictions.append(1)
-
-  return predictions
 
 def feature_engineering_KNN_SVM_Naive_Bayes(df):
     df_clean = df.copy()
