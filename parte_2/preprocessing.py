@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn import preprocessing
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import StandardScaler
 
 def GetSeedForTrainSplit():
     return 15;
@@ -27,7 +27,7 @@ def set_value_row_casado_trabajo(row):
 
 #Aplica one hot encoding
 def apply_one_hot_encoding(df, columnsToApply):  
-    return pd.get_dummies(df, drop_first=True, columns = columnsToApply)
+  return pd.get_dummies(df, drop_first=True, columns = columnsToApply)
     
 #Unifico los labels "casado" y "casada" en "casado"
 def unificar_values_casado_casada(df):
@@ -74,50 +74,42 @@ def get_columns_by_index(df, indexes):
 
   return df.iloc[:, lambda df: indexes]
 
-def feature_engineering_KNN_SVM_Naive_Bayes(df):
-    df_clean = df.copy()
+def feature_engineering_KNN_con_seleccion(df):
+  df_clean = df.copy()   
 
-    df_clean["educacion_alcanzada"].replace({"preescolar" : 1, "1-4_grado": 2, "5-6_grado": 3, "7-8_grado" : 4, "9_grado" : 5, "1_anio" : 6, "2_anio" : 7, "3_anio" : 8, "4_anio" : 9, "5_anio" : 10, "universidad_1_anio" : 11, 
-      "universidad_2_anio" : 12, "universidad_3_anio" : 13, "universidad_4_anio" : 14, "universiada_5_anio" : 15, "universiada_6_anio" : 16}, inplace = True)
+  # Conversion de variables
+  df_clean.rol_familiar_registrado.replace(to_replace=["casada"], value=["casado"], inplace=True)
+
+  # Elimino columnas
+  df_clean.drop(columns = ['barrio', 'anios_estudiados', 'edad', 'educacion_alcanzada', 'estado_marital', 
+    'ganancia_perdida_declarada_bolsa_argentina', 'horas_trabajo_registradas', 'religion', 'categoria_de_trabajo' ], inplace = True)
+
+  # Tratamiento de NaN
+  df_clean.fillna('NaN', inplace=True)
     
-    df_clean.rol_familiar_registrado.replace(to_replace=["casada"], value=["casado"], inplace=True)
-    df_clean["opera_en_bolsa"] = df_clean["ganancia_perdida_declarada_bolsa_argentina"].apply(lambda x: 1 if x != 0 else 0)
+  # One hot encoding
+  df_clean = apply_one_hot_encoding(df_clean, ['genero', 'rol_familiar_registrado', 'trabajo'])
+  
+  return df_clean
 
-    # Tratamiento de NaN
-    df_clean.fillna('NaN', inplace=True)
+def preprocessing_KNN_con_todos_los_features(df):
+  df_clean = df.copy()
 
-    # Conversion de variables
-    ordinalEncoder = OrdinalEncoder(dtype='int')
-    columns_to_encode = ['barrio', 'categoria_de_trabajo', 'estado_marital', 'genero', 'religion', 'rol_familiar_registrado', 'trabajo']
-    try:
-      df_clean[['barrio_encoded', 'categoria_de_trabajo_encoded', 'estado_marital_encoded', 'genero_encoded', 'religion_encoded', 'rol_familiar_registrado_encoded', 'trabajo_encoded']] \
-        = ordinalEncoder.fit_transform(df_clean[columns_to_encode].astype(str))
-    except Exception as exception:
-      print(f'Error en ordinal encoder: {exception}')
+  # Conversion de variables
+  df_clean["educacion_alcanzada"].replace({"preescolar" : 1, "1-4_grado": 2, "5-6_grado": 3, "7-8_grado" : 4, "9_grado" : 5, "1_anio" : 6, "2_anio" : 7, "3_anio" : 8, "4_anio" : 9, "5_anio" : 10, "universidad_1_anio" : 11, 
+    "universidad_2_anio" : 12, "universidad_3_anio" : 13, "universidad_4_anio" : 14, "universiada_5_anio" : 15, "universiada_6_anio" : 16}, inplace = True)
 
-    # Elimino columnas
-    df_clean.drop(columns = ['barrio', 'ganancia_perdida_declarada_bolsa_argentina', 'categoria_de_trabajo', 'estado_marital', 'genero', 'religion', 'rol_familiar_registrado', 'trabajo'], inplace = True)
-    
-    return df_clean
+  df_clean.rol_familiar_registrado.replace(to_replace=["casada"], value=["casado"], inplace=True)
+  df_clean["opera_en_bolsa"] = df_clean["ganancia_perdida_declarada_bolsa_argentina"].apply(lambda x: 1 if x != 0 else 0)
 
-def feature_engineering_TP_primera_parte(df):
-    df_clean = df.copy()   
-    df_clean.rol_familiar_registrado.replace(to_replace=["casada"], value=["casado"], inplace=True)
-    # Tratamiento de NaN
-    df_clean.fillna('NaN', inplace=True)
+  # Elimino columnas
+  df_clean.drop(columns = ['ganancia_perdida_declarada_bolsa_argentina', 'barrio'], inplace = True)
 
-    # Conversion de variables
-    ordinalEncoder = OrdinalEncoder(dtype='int')
-    columns_to_encode = ['genero', 'rol_familiar_registrado', 'trabajo']
-    try:
-      df_clean[['genero_encoded', 'rol_familiar_registrado_encoded', 'trabajo_encoded']] \
-        = ordinalEncoder.fit_transform(df_clean[columns_to_encode].astype(str))
-    except Exception as exception:
-      print(f'Error en ordinal encoder: {exception}')
+  # Tratamiento de NaN
+  df_clean.fillna('NaN', inplace=True)
 
-    # Elimino columnas
-    df_clean.drop(columns = ['barrio', 'ganancia_perdida_declarada_bolsa_argentina', 'categoria_de_trabajo', 'estado_marital', 'genero', 'anios_estudiados', 'edad', 'educacion_alcanzada', 
-      'horas_trabajo_registradas', 'religion', 'rol_familiar_registrado', 'trabajo'], 
-       inplace = True)
-    
-    return df_clean
+  # One hot encoding
+  df_clean = apply_one_hot_encoding(df_clean, ['categoria_de_trabajo', 'estado_marital', 'genero', 'religion', 'rol_familiar_registrado', 'trabajo'])
+
+  return df_clean
+  
