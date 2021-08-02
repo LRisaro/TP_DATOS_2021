@@ -72,7 +72,7 @@ def get_columns_by_index(df, indexes):
 
   return df.iloc[:, lambda df: indexes]
 
-def feature_engineering_KNN_con_seleccion(df):
+def feature_engineering_con_seleccion(df):
   df_clean = df.copy()   
 
   # Conversion de variables
@@ -90,7 +90,7 @@ def feature_engineering_KNN_con_seleccion(df):
   
   return df_clean
 
-def preprocessing_KNN_con_todos_los_features(df):
+def preprocessing_con_todos_los_features(df):
   df_clean = df.copy()
 
   # Conversion de variables
