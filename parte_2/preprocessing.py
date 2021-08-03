@@ -6,7 +6,7 @@ def GetSeedForTrainSplit():
     return 15;
 
 #Crea una columna si el usuario pertenece a un cierto rango de edad
-def set_age_range(df):
+def feature_engineering_add_age_range(df):
     df["edad_10_y_20"] = df["edad"].apply(lambda x: 1 if x > 10 and x <= 20 else 0)
     df["edad_21_y_30"] = df["edad"].apply(lambda x: 1 if x > 20 and x <= 30 else 0)
     df["edad_31_y_40"] = df["edad"].apply(lambda x: 1 if x > 30 and x <= 40 else 0)
@@ -16,7 +16,8 @@ def set_age_range(df):
     df["edad_71_y_80"] = df["edad"].apply(lambda x: 1 if x > 70 and x <= 80 else 0)
     df["edad_81_y_90"] = df["edad"].apply(lambda x: 1 if x > 80 and x <= 90 else 0)
     
-    return df
+    return feature_engineering_original_set(df)
+     
 
 #Funcion que devuelve un 1 si esa row posee esta combinacion en especifico de valores en sus columnas "trabajo" y "rol_familiar_registrado"
 def set_value_row_casado_trabajo(row):
@@ -39,7 +40,7 @@ def crear_columna_es_hombre(df):
     df["es_hombre"] = df["genero"].apply(lambda x: 1 if x == "hombre" else 0)
     return df
     
-def feature_engineering_xg_rf(df):
+def feature_engineering_original_set(df):
 
     #Creo columna opera_en_bolsa que indica si opero en bolsa o no
     df["opera_en_bolsa"] = df["ganancia_perdida_declarada_bolsa_argentina"].apply(lambda x: 1 if x != 0 else 0)
@@ -69,8 +70,7 @@ def feature_engineering_xg_rf(df):
     
 #Devuelve solo las columnas que le pido a travez de los indexes
 def get_columns_by_index(df, indexes):
-
-  return df.iloc[:, lambda df: indexes]
+    return df.iloc[:, lambda df: indexes]
 
 def feature_engineering_con_seleccion(df):
   df_clean = df.copy()   
